@@ -14,7 +14,6 @@ import {
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
-import SettingsIcon from "@mui/icons-material/Settings";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -98,31 +97,11 @@ export default function Sidebar() {
               <ListItemText primary="Student" />
             </ListItemButton>
           </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton
-              sx={{
-                borderRadius: 2,
-                mb: 0.5,
-                "&:hover": {
-                  backgroundColor: "#333",
-                },
-              }}
-            >
-              <ListItemIcon>
-                <SettingsIcon sx={{ color: "white" }} />
-              </ListItemIcon>
-
-              <ListItemText primary="Settings" />
-            </ListItemButton>
-          </ListItem>
-
           <ListItem disablePadding>
             <ListItemButton
               onClick={handleLogout}
               sx={{
                 borderRadius: 2,
-
                 "&:hover": {
                   backgroundColor: "#333",
                 },

@@ -29,6 +29,7 @@ export interface StudentCardData {
   experience: string | number;
   status: string;
   score: number;
+  Pendingassignment: number;
 }
 
 interface StudentCardProps {
@@ -49,8 +50,6 @@ export default function StudentCard({ student }: StudentCardProps) {
       }}
     >
       <CardContent sx={{ p: 4 }}>
-        {/* HEADER */}
-
         <Box
           sx={{
             display: "flex",
@@ -79,9 +78,6 @@ export default function StudentCard({ student }: StudentCardProps) {
         </Box>
 
         <Divider sx={{ mb: 3 }} />
-
-        {/* PERSONAL INFORMATION */}
-
         <Typography variant="h6" sx={{ mb: 2 }}>
           Personal Information
         </Typography>
@@ -107,12 +103,9 @@ export default function StudentCard({ student }: StudentCardProps) {
 
         <Divider sx={{ my: 3 }} />
 
-        {/* COURSE INFORMATION */}
-
         <Typography variant="h6" sx={{ mb: 2 }}>
           Course Information
         </Typography>
-
         <Box
           sx={{
             display: "grid",
@@ -132,9 +125,6 @@ export default function StudentCard({ student }: StudentCardProps) {
         </Box>
 
         <Divider sx={{ my: 3 }} />
-
-        {/* STATUS */}
-
         <Typography variant="h6" sx={{ mb: 2 }}>
           Status & Performance
         </Typography>
@@ -149,9 +139,12 @@ export default function StudentCard({ student }: StudentCardProps) {
           <InfoItem label="Status" value={student.status} />
 
           <InfoItem label="Score" value={`${student.score}%`} />
-        </Box>
+          <InfoItem
+            label="Pending assignments"
+            value={student.Pendingassignment}
+          />
 
-        {/* PROGRESS */}
+        </Box>
 
         <Box sx={{ mt: 3 }}>
           <Box
@@ -167,7 +160,6 @@ export default function StudentCard({ student }: StudentCardProps) {
               {student.score}%
             </Typography>
           </Box>
-
           <LinearProgress
             variant="determinate"
             value={student.score}
@@ -177,9 +169,6 @@ export default function StudentCard({ student }: StudentCardProps) {
             }}
           />
         </Box>
-
-        {/* BACK */}
-
         <Box sx={{ mt: 4 }}>
           <Button
             variant="outlined"

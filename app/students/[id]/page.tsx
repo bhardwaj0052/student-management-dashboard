@@ -12,21 +12,13 @@ import StudentCard, {
 
 export default function ViewStudent() {
   const { id } = useParams<{ id: string }>();
-
   const [student, setStudent] = useState<StudentCardData | null>(null);
 
   useEffect(() => {
-    const storedData =
-      localStorage.getItem("student");
-
+    const storedData = localStorage.getItem("student");
     if (!storedData) return;
-
     const students: StudentCardData[] = JSON.parse(storedData);
-
-    const foundStudent = students.find(
-      (student) => String(student.id) === id,
-    );
-
+    const foundStudent = students.find((student) => String(student.id) === id);
     if (foundStudent) {
       setStudent({
         ...foundStudent,
@@ -54,7 +46,6 @@ export default function ViewStudent() {
   return (
     <Box sx={{ minHeight: "100vh" }}>
       <Sidebar />
-
       <Box
         component="main"
         sx={{
@@ -63,9 +54,7 @@ export default function ViewStudent() {
           boxSizing: "border-box",
         }}
       >
-        <StudentCard
-          student={student}
-        />
+        <StudentCard student={student} />
       </Box>
     </Box>
   );

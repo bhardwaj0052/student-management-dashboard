@@ -70,8 +70,7 @@ export default function StudentTableHeader({
       const searchValue = debouncedSearch.toLowerCase();
       const fullName = `${student.firstName} ${student.lastName}`.toLowerCase();
       const email = student.email.toLowerCase();
-      const matchesSearch =
-        fullName.includes(searchValue) || email.includes(searchValue);
+      const matchesSearch =fullName.includes(searchValue) || email.includes(searchValue);
       const matchesCourse = course === "All" || student.course === course;
       const matchesStatus = status === "All" || student.status === status;
       let matchesScore = true;
@@ -116,10 +115,8 @@ export default function StudentTableHeader({
     setCourse("All");
     setStatus("All");
     setScore("All");
-
     setOrder("asc");
     setOrderBy("id");
-
     onDataChange(data);
   };
 

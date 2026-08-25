@@ -3,11 +3,14 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
 import {
   Box,
   Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   Step,
   StepLabel,
   Stepper,
@@ -26,49 +29,43 @@ export interface StudentFormValues {
   startdate: string;
   trainer: string;
   experience: string;
+  status: string;
+  score: number;
+  Pendingassignment: number;
 }
-
 type FormMode = "add" | "edit";
-
 interface StudentFormProps {
   mode: FormMode;
   initialValues?: StudentFormValues;
   onSubmit?: (values: StudentFormValues) => void;
 }
-
 const steps = ["Basic Information", "Course Information", "Review"];
-
 const validationSchemas = [
   Yup.object({
     firstName: Yup.string()
       .required("First name is required")
       .min(2, "Minimum 2 characters"),
-
     lastName: Yup.string()
       .required("Last name is required")
       .min(2, "Minimum 2 characters"),
-
     email: Yup.string().email("Invalid email").required("Email is required"),
-
     phone: Yup.string()
       .required("Phone number is required")
       .matches(/^[0-9]{10}$/, "Phone must be 10 digits"),
-
     dateOfBirth: Yup.date().required("Date of birth is required"),
   }),
-
   Yup.object({
     course: Yup.string().required("Course is required"),
-
     Batch: Yup.number().required("Batch is required"),
-
     startdate: Yup.date().required("Start date is required"),
-
     trainer: Yup.string().required("Trainer's name is required"),
-
     experience: Yup.number().required("Experience is required"),
+    status: Yup.string()
+      .oneOf(["Pending", "Active", "Completed"], "Invalid status")
+      .required("Status is required"),
+    score: Yup.number(),
+    Pendingassignment: Yup.number(),
   }),
-
   Yup.object(),
 ];
 
@@ -83,6 +80,9 @@ const emptyValues: StudentFormValues = {
   startdate: "",
   trainer: "",
   experience: "",
+  status: "",
+  score: 0,
+  Pendingassignment: 0,
 };
 
 export default function StudentForm({
@@ -91,24 +91,18 @@ export default function StudentForm({
   onSubmit,
 }: StudentFormProps) {
   const [activeStep, setActiveStep] = useState(0);
-
   const formik = useFormik<StudentFormValues>({
     initialValues: initialValues ?? emptyValues,
-
     validationSchema: validationSchemas[activeStep],
-
     enableReinitialize: true,
-
     onSubmit: (values) => {
       if (onSubmit) {
         onSubmit(values);
       }
     },
   });
-
   const handleNext = async () => {
     const errors = await formik.validateForm();
-
     if (Object.keys(errors).length > 0) {
       formik.setTouched(
         Object.keys(errors).reduce(
@@ -119,17 +113,13 @@ export default function StudentForm({
           {} as Record<string, boolean>,
         ),
       );
-
       return;
     }
-
     setActiveStep((prev) => prev + 1);
   };
-
   const handleBack = () => {
     setActiveStep((prev) => prev - 1);
   };
-
   return (
     <Box
       sx={{
@@ -142,7 +132,6 @@ export default function StudentForm({
         {mode === "add" && "Add Student"}
         {mode === "edit" && "Edit Student"}
       </Typography>
-
       <Stepper activeStep={activeStep} sx={{ mb: 5 }}>
         {steps.map((label) => (
           <Step key={label}>
@@ -150,10 +139,7 @@ export default function StudentForm({
           </Step>
         ))}
       </Stepper>
-
       <Paper sx={{ p: 4 }}>
-        {/* STEP 1 */}
-
         {activeStep === 0 && (
           <Box
             sx={{
@@ -163,7 +149,6 @@ export default function StudentForm({
             }}
           >
             <Typography variant="h6">Basic Information</Typography>
-
             <TextField
               name="firstName"
               label="First Name"
@@ -176,7 +161,6 @@ export default function StudentForm({
               helperText={formik.touched.firstName && formik.errors.firstName}
               fullWidth
             />
-
             <TextField
               name="lastName"
               label="Last Name"
@@ -187,7 +171,6 @@ export default function StudentForm({
               helperText={formik.touched.lastName && formik.errors.lastName}
               fullWidth
             />
-
             <TextField
               name="email"
               label="Email"
@@ -198,7 +181,6 @@ export default function StudentForm({
               helperText={formik.touched.email && formik.errors.email}
               fullWidth
             />
-
             <TextField
               name="phone"
               label="Phone"
@@ -209,7 +191,6 @@ export default function StudentForm({
               helperText={formik.touched.phone && formik.errors.phone}
               fullWidth
             />
-
             <TextField
               name="dateOfBirth"
               label="Date of Birth"
@@ -241,7 +222,6 @@ export default function StudentForm({
             }}
           >
             <Typography variant="h6">Course Information</Typography>
-
             <TextField
               name="course"
               label="Course"
@@ -252,7 +232,6 @@ export default function StudentForm({
               helperText={formik.touched.course && formik.errors.course}
               fullWidth
             />
-
             <TextField
               name="Batch"
               label="Batch"
@@ -264,7 +243,6 @@ export default function StudentForm({
               helperText={formik.touched.Batch && formik.errors.Batch}
               fullWidth
             />
-
             <TextField
               name="startdate"
               label="Start Date"
@@ -283,7 +261,6 @@ export default function StudentForm({
               helperText={formik.touched.startdate && formik.errors.startdate}
               fullWidth
             />
-
             <TextField
               name="trainer"
               label="Trainer"
@@ -294,7 +271,6 @@ export default function StudentForm({
               helperText={formik.touched.trainer && formik.errors.trainer}
               fullWidth
             />
-
             <TextField
               name="experience"
               label="Experience"
@@ -308,6 +284,52 @@ export default function StudentForm({
               helperText={formik.touched.experience && formik.errors.experience}
               fullWidth
             />
+            <FormControl
+              fullWidth
+              error={formik.touched.status && Boolean(formik.errors.status)}
+            >
+              <InputLabel id="status-label">Status</InputLabel>
+              <Select
+                labelId="status-label"
+                name="status"
+                value={formik.values.status}
+                label="Status"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              >
+                <MenuItem value="Pending">Pending</MenuItem>
+                <MenuItem value="Active">Active</MenuItem>
+                <MenuItem value="Completed">Completed</MenuItem>
+              </Select>
+            </FormControl>
+            <TextField
+              name="score"
+              label="Score"
+              type="number"
+              value={formik.values.score}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.score && Boolean(formik.errors.score)}
+              helperText={formik.touched.score && formik.errors.score}
+              fullWidth
+            />
+            <TextField
+              name="Pendingassignment"
+              label="Pending Assignments"
+              type="number"
+              value={formik.values.Pendingassignment}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.Pendingassignment &&
+                Boolean(formik.errors.Pendingassignment)
+              }
+              helperText={
+                formik.touched.Pendingassignment &&
+                formik.errors.Pendingassignment
+              }
+              fullWidth
+            />
           </Box>
         )}
         {activeStep === 2 && (
@@ -315,45 +337,45 @@ export default function StudentForm({
             <Typography variant="h6" sx={{ mb: 3 }}>
               Student Details
             </Typography>
-
             <Typography>
               <strong>First Name:</strong> {formik.values.firstName}
             </Typography>
-
             <Typography>
               <strong>Last Name:</strong> {formik.values.lastName}
             </Typography>
-
             <Typography>
               <strong>Email:</strong> {formik.values.email}
             </Typography>
-
             <Typography>
               <strong>Phone:</strong> {formik.values.phone}
             </Typography>
-
             <Typography>
               <strong>Date of Birth:</strong> {formik.values.dateOfBirth}
             </Typography>
-
             <Typography>
               <strong>Course:</strong> {formik.values.course}
             </Typography>
-
             <Typography>
               <strong>Batch:</strong> {formik.values.Batch}
             </Typography>
-
             <Typography>
               <strong>Start Date:</strong> {formik.values.startdate}
             </Typography>
-
             <Typography>
               <strong>Trainer:</strong> {formik.values.trainer}
             </Typography>
-
             <Typography>
               <strong>Experience:</strong> {formik.values.experience}
+            </Typography>
+            <Typography>
+              <strong>Status:</strong> {formik.values.status}
+            </Typography>
+            <Typography>
+              <strong>Score:</strong> {formik.values.score}
+            </Typography>
+            <Typography>
+              <strong>Pending assignment:</strong>{" "}
+              {formik.values.Pendingassignment}
             </Typography>
           </Box>
         )}
@@ -367,7 +389,6 @@ export default function StudentForm({
           <Button disabled={activeStep === 0} onClick={handleBack}>
             Back
           </Button>
-
           {activeStep < 2 ? (
             <Button variant="contained" onClick={handleNext}>
               Next

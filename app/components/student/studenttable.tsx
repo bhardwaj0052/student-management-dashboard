@@ -4,68 +4,87 @@ import {
   Box,
   IconButton,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
 } from "@mui/material";
-
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useCallback, useState } from "react";
-
 import { useRouter } from "next/navigation";
-
 import StudentTableHeader, { Student } from "./studenttableheader";
 
-export default function StudentTable() {
+export default function StudntTable() {
   const router = useRouter();
-
   const [students, setStudents] = useState<Student[]>([]);
-
-  const [page, setPage] = useState(0);
-
-  const rowsPerPage = 15;
-
-  // IMPORTANT:
-  // useCallback prevents infinite render loop
   const handleDataChange = useCallback((data: Student[]) => {
     setStudents(data);
-    setPage(0);
   }, []);
-
-  // Delete
-  const handleDelete = (id: string) => {
-    const stored = localStorage.getItem("student");
-
-    if (!stored) return;
-
-    const data: Student[] = JSON.parse(stored);
-
-    const updated = data.filter((student) => student.id !== id);
-
-    localStorage.setItem("student", JSON.stringify(updated));
-
-    setStudents(updated);
-
-    // If current page becomes empty
-    const newTotalPages = Math.ceil(updated.length / rowsPerPage);
-
-    if (page >= newTotalPages && newTotalPages > 0) {
-      setPage(newTotalPages - 1);
+  const handleDelete = (id: string, name: string) => {
+    const confirmDelete = window.confirm(
+      `Are you sure you want to delete ${name} ?`,
+    );
+    if (!confirmDelete) {
+      return;
     }
+    const stored = localStorage.getItem("student");
+    if (!stored) return;
+    const data: Student[] = JSON.parse(stored);
+    const updated = data.filter((student) => student.id !== id);
+    localStorage.setItem("student", JSON.stringify(updated));
+    setStudents(updated);
   };
 
-  // Pagination
-  const paginatedData = students.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage,
-  );
+  const columns: GridColDef<Student>[] = [
+    {
+      field: "name",
+      headerName: "Name",
+      flex: 1.2,
+      minWidth: 180,
+      valueGetter: (_, row) => `${row.firstName} ${row.lastName}`,
+    },
+    { field: "email", headerName: "Email", flex: 1.4, minWidth: 220 },
+    { field: "course", headerName: "Course", flex: 1, minWidth: 150 },
+    { field: "status", headerName: "Status", flex: 0.7, minWidth: 120 },
+    { field: "score", headerName: "Score", flex: 0.5, minWidth: 90 },
+    {
+      field: "actions",
+      headerName: "Action",
+      sortable: false,
+      filterable: false,
+      flex: 0.9,
+      minWidth: 150,
+      align: "center",
+      headerAlign: "center",
+      renderCell: ({ row }) => (
+        <Box>
+          <IconButton
+            size="small"
+            color="primary"
+            aria-label={`View ${row.firstName} ${row.lastName}`}
+            onClick={() => router.push(`/students/${row.id}`)}
+          >
+            <VisibilityIcon fontSize="small" />
+          </IconButton>
+          <IconButton
+            size="small"
+            color="warning"
+            aria-label={`Edit ${row.firstName} ${row.lastName}`}
+            onClick={() => router.push(`/students/${row.id}/edit`)}
+          >
+            <EditIcon fontSize="small" />
+          </IconButton>
+          <IconButton
+            size="small"
+            color="error"
+            aria-label={`Delete ${row.firstName} ${row.lastName}`}
+            onClick={() => handleDelete(row.id, row.firstName)}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </Box>
+      ),
+    },
+  ];
 
   return (
     <Box>
@@ -73,189 +92,32 @@ export default function StudentTable() {
         onDataChange={handleDataChange}
         onAddStudent={() => router.push("/students/add")}
       />
-
-      <TableContainer
-        component={Paper}
+      <Paper
         sx={{
           width: "100%",
-          overflowX: "auto",
           borderRadius: 2,
         }}
       >
-        <Table
-          sx={{
-            minWidth: 700,
-            tableLayout: "fixed",
+        <DataGrid
+          rows={students}
+          columns={columns}
+          getRowId={(row) => row.id}
+          initialState={{
+            pagination: {
+              paginationModel: { pageSize: 15, page: 0 },
+            },
           }}
-        >
-          <TableHead>
-            <TableRow
-              sx={{
-                backgroundColor: "#f5f5f5",
-              }}
-            >
-              <TableCell
-                sx={{
-                  width: "22%",
-                  fontWeight: 600,
-                }}
-              >
-                Name
-              </TableCell>
-
-              <TableCell
-                sx={{
-                  width: "25%",
-                  fontWeight: 600,
-                }}
-              >
-                Email
-              </TableCell>
-
-              <TableCell
-                sx={{
-                  width: "18%",
-                  fontWeight: 600,
-                }}
-              >
-                Course
-              </TableCell>
-
-              <TableCell
-                sx={{
-                  width: "12%",
-                  fontWeight: 600,
-                }}
-              >
-                Status
-              </TableCell>
-
-              <TableCell
-                sx={{
-                  width: "10%",
-                  fontWeight: 600,
-                }}
-              >
-                Score
-              </TableCell>
-
-              <TableCell
-                sx={{
-                  width: "13%",
-                  fontWeight: 600,
-                  textAlign: "center",
-                }}
-              >
-                Action
-              </TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {paginatedData.map((student) => (
-              <TableRow key={student.id} hover>
-                <TableCell
-                  sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {student.firstName} {student.lastName}
-                </TableCell>
-
-                <TableCell
-                  sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {student.email}
-                </TableCell>
-
-                <TableCell
-                  sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {student.course}
-                </TableCell>
-
-                <TableCell>{student.status}</TableCell>
-
-                <TableCell>{student.score}</TableCell>
-
-                <TableCell
-                  sx={{
-                    textAlign: "center",
-                    whiteSpace: "nowrap",
-                    padding: "6px",
-                  }}
-                >
-                  {/* VIEW */}
-
-                  <IconButton
-                    size="small"
-                    color="primary"
-                    onClick={() => router.push(`/students/${student.id}`)}
-                  >
-                    <VisibilityIcon fontSize="small" />
-                  </IconButton>
-
-                  {/* EDIT */}
-
-                  <IconButton
-                    size="small"
-                    color="warning"
-                    onClick={() => router.push(`/students/${student.id}/edit`)}
-                  >
-                    <EditIcon fontSize="small" />
-                  </IconButton>
-
-                  {/* DELETE */}
-
-                  <IconButton
-                    size="small"
-                    color="error"
-                    onClick={() => handleDelete(student.id)}
-                  >
-                    <DeleteIcon fontSize="small" />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-
-            {paginatedData.length === 0 && (
-              <TableRow>
-                <TableCell
-                  colSpan={6}
-                  align="center"
-                  sx={{
-                    py: 5,
-                    color: "text.secondary",
-                  }}
-                >
-                  No students found
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-
-        <TablePagination
-          component="div"
-          count={students.length}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          rowsPerPageOptions={[]}
-          onPageChange={(_, newPage) => {
-            setPage(newPage);
+          pageSizeOptions={[15]}
+          disableRowSelectionOnClick
+          sx={{
+            border: 0,
+            minHeight: 300,
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "#f5f5f5",
+            },
           }}
         />
-      </TableContainer>
+      </Paper>
     </Box>
   );
 }

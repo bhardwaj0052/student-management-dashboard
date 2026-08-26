@@ -8,16 +8,14 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Toolbar,
-  Typography,
 } from "@mui/material";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { usePathname, useRouter } from "next/navigation";
-import { clearAuth } from "@/services/authService";
 import { useAuth } from "@/context/AuthContext";
+import { Timeline } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -44,6 +42,8 @@ export default function Sidebar() {
           top: { xs: 56, sm: 64 },
           height: { xs: "calc(100% - 56px)", sm: "calc(100% - 64px)" },
           boxSizing: "border-box",
+          display: "flex",
+          flexDirection: "column",
           backgroundColor: "black",
           color: "white",
           borderRight: "1px solid #333",
@@ -90,6 +90,29 @@ export default function Sidebar() {
               <ListItemText primary="Student" />
             </ListItemButton>
           </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton
+              onClick={() => router.push("/activity")}
+              sx={{
+                borderRadius: 2,
+                mb: 0.5,
+                backgroundColor: isActive("/activity") ? "#333" : "transparent",
+                "&:hover": {
+                  backgroundColor: "#333",
+                },
+              }}
+            >
+              <ListItemIcon>
+                <Timeline sx={{ color: "white" }} />
+              </ListItemIcon>
+              <ListItemText primary="Activity" />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Box>
+
+      <Box sx={{ mt: "auto", px: 1, pb: 1 }}>
+        <List>
           <ListItem disablePadding>
             <ListItemButton
               onClick={handleLogout}

@@ -71,6 +71,7 @@ export default function Dashboard({
 
   return (
     <Box sx={{ p: 2 }}>
+      <Typography sx={{ fontSize: 30, fontWeight: 700 }}>Dashboard</Typography>
       <Box
         sx={{
           mt: 1,

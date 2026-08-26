@@ -278,46 +278,25 @@ export default function StudentForm({
             <Typography variant="h6" sx={{ mb: 3 }}>
               Student Details
             </Typography>
-            <Typography>
-              <strong>First Name:</strong> {formik.values.firstName}
-            </Typography>
-            <Typography>
-              <strong>Last Name:</strong> {formik.values.lastName}
-            </Typography>
-            <Typography>
-              <strong>Email:</strong> {formik.values.email}
-            </Typography>
-            <Typography>
-              <strong>Phone:</strong> {formik.values.phone}
-            </Typography>
-            <Typography>
-              <strong>Date of Birth:</strong> {formik.values.dateOfBirth}
-            </Typography>
-            <Typography>
-              <strong>Course:</strong> {formik.values.course}
-            </Typography>
-            <Typography>
-              <strong>Batch:</strong> {formik.values.Batch}
-            </Typography>
-            <Typography>
-              <strong>Start Date:</strong> {formik.values.startdate}
-            </Typography>
-            <Typography>
-              <strong>Trainer:</strong> {formik.values.trainer}
-            </Typography>
-            <Typography>
-              <strong>Experience:</strong> {formik.values.experience}
-            </Typography>
-            <Typography>
-              <strong>Status:</strong> {formik.values.status}
-            </Typography>
-            <Typography>
-              <strong>Score:</strong> {formik.values.score}
-            </Typography>
-            <Typography>
-              <strong>Pending assignment:</strong>{" "}
-              {formik.values.Pendingassignment}
-            </Typography>
+            {[
+              ["First Name", formik.values.firstName],
+              ["Last Name", formik.values.lastName],
+              ["Email", formik.values.email],
+              ["Phone", formik.values.phone],
+              ["Date of Birth", formik.values.dateOfBirth],
+              ["Course", formik.values.course],
+              ["Batch", formik.values.Batch],
+              ["Start Date", formik.values.startdate],
+              ["Trainer", formik.values.trainer],
+              ["Experience", formik.values.experience],
+              ["Status", formik.values.status],
+              ["Score", formik.values.score],
+              ["Pending assignment", formik.values.Pendingassignment],
+            ].map(([label, value]) => (
+              <Typography key={label} sx={{gap:2}}>
+                <strong>{label}:</strong> {value}
+              </Typography>
+            ))}
           </Box>
         )}
         <Box

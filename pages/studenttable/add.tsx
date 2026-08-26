@@ -11,7 +11,6 @@ export default function AddStudentpage() {
   const router = useRouter();
   const handleSubmit = async (values: StudentFormValues) => {
     const newStudent = await createStudent(values);
-    console.log("Student Added:", newStudent);
     router.push("/students");
   };
 

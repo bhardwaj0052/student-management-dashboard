@@ -1,4 +1,4 @@
-"use client";
+
 import StudentTable from "@/components/studentTable/studenttable";
 import Sidebar from "@/components/sidebar/sidebar";
 import { Box } from "@mui/material";

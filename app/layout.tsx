@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import AuthGuard from "@/context/AuthGuard";
-import Footer from "@/components/header/footer";
+import { AuthProvider } from "@/context/AuthContext";
 import Header from "@/components/header/header";
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,9 +27,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         <AppRouterCacheProvider options={{ key: "mui" }}>
-          <Header />
-          <AuthGuard>{children}</AuthGuard>
-          <Footer />
+          <AuthProvider>
+            <Header />
+            <AuthGuard>{children}</AuthGuard>
+            {/* <Footer /> */}
+          </AuthProvider>
         </AppRouterCacheProvider>
       </body>
     </html>

@@ -1,15 +1,20 @@
 "use client";
 
-import { AppBar, Toolbar, Typography,} from "@mui/material";
+import { AppBar, Toolbar, Typography, Box, Avatar } from "@mui/material";
+import SchoolIcon from "@mui/icons-material/School";
+import { useAuth } from "@/context/AuthContext";
+
 export default function Header() {
+  const { admin } = useAuth();
 
   return (
     <AppBar
       position="fixed"
+      elevation={0}
       sx={{
         backgroundColor: "black",
-        borderBottom: "0.5px solid",
-        borderColor: "divider",
+        borderBottom: "1px solid",
+        borderColor: "rgba(255,255,255,0.1)",
       }}
     >
       <Toolbar
@@ -17,16 +22,65 @@ export default function Header() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          minHeight: 64,
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{
-            color: "whitesmoke",
-            fontWeight: 500,
-          }}
-        >
-        </Typography>
+        {/* Left: brand */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          <Box
+            sx={{
+              width: 36,
+              height: 36,
+              borderRadius: 2,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "primary.main",
+            }}
+          >
+            <SchoolIcon sx={{ color: "white", fontSize: 20 }} />
+          </Box>
+          <Typography
+            variant="h6"
+            sx={{
+              color: "whitesmoke",
+              fontWeight: 600,
+              letterSpacing: 0.3,
+            }}
+          >
+            Student Management Dashboard
+          </Typography>
+        </Box>
+        
+        {admin && (
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+            <Box sx={{ textAlign: "right" }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "whitesmoke", fontWeight: 600, lineHeight: 1.2 }}
+              >
+                Admin
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{ color: "rgba(255,255,255,0.6)" }}
+              >
+                {admin.mobilenumber}
+              </Typography>
+            </Box>
+            <Avatar
+              sx={{
+                width: 36,
+                height: 36,
+                bgcolor: "primary.main",
+                fontSize: 14,
+                fontWeight: 600,
+              }}
+            >
+              {admin.mobilenumber?.toString().slice(-2) ?? "A"}
+            </Avatar>
+          </Box>
+        )}
       </Toolbar>
     </AppBar>
   );

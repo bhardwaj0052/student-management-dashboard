@@ -17,19 +17,21 @@ import PeopleIcon from "@mui/icons-material/People";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { usePathname, useRouter } from "next/navigation";
 import { clearAuth } from "@/services/authService";
+import { useAuth } from "@/context/AuthContext";
 
 const drawerWidth = 240;
 
 export default function Sidebar() {
   const router = useRouter();
+  const { logout } = useAuth();
 
   const handleLogout = () => {
-    clearAuth();
+    logout();
     router.replace("/");
   };
   const pathname = usePathname();
   const isActive = (path: string) =>
-    pathname === path || pathname.startsWith(`${path}/`);
+    pathname === path || pathname?.startsWith(`${path}/`) === true;
 
   return (
     <Drawer
@@ -39,6 +41,8 @@ export default function Sidebar() {
         flexShrink: 0,
         "& .MuiDrawer-paper": {
           width: drawerWidth,
+          top: { xs: 56, sm: 64 },
+          height: { xs: "calc(100% - 56px)", sm: "calc(100% - 64px)" },
           boxSizing: "border-box",
           backgroundColor: "black",
           color: "white",
@@ -46,17 +50,6 @@ export default function Sidebar() {
         },
       }}
     >
-      <Toolbar>
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: 600,
-            color: "white",
-          }}
-        >
-          Dashboard
-        </Typography>
-      </Toolbar>
 
       <Box sx={{ overflow: "auto", px: 1 }}>
         <List>

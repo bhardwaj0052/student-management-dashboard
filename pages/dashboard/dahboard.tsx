@@ -1,28 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import Sidebar from "@/components/sidebar/sidebar";
 import DashboardCard from "@/components/statecard/dashboardCard";
-import { getStudents } from "@/services/studentService";
-
-type StoredStudent = {
-  status: string;
-  score: number;
-};
+import { useStudents } from "@/hooks/useStudent";
 
 export default function Dashboardpage() {
-  const [students, setStudents] = useState<StoredStudent[]>([]);
-
-  useEffect(() => {
-    const loadStudents = async () => {
-      const storedStudents = await getStudents<StoredStudent>();
-
-      setStudents(storedStudents);
-    };
-
-    void loadStudents();
-  }, []);
+  const { students } = useStudents();
 
   const active = students.filter(
     (student) => student.status.toLowerCase() === "active",
@@ -34,6 +18,10 @@ export default function Dashboardpage() {
     ? students.reduce((total, student) => total + student.score, 0) /
       students.length
     : 0;
+  const pendingAssignments = students.reduce(
+    (total, student) => total + student.Pendingassignment,
+    0,
+  );
 
   return (
     <Box sx={{ minHeight: "100vh" }}>
@@ -53,6 +41,7 @@ export default function Dashboardpage() {
           active={active}
           completed={completed}
           averageScore={averageScore}
+          pendingAssignments={pendingAssignments}
         />
       </Box>
     </Box>

@@ -10,16 +10,19 @@ import {
 } from "@mui/material"; 
 import { useState } from "react";
 import { saveAuth } from "@/services/authService";
+import { useAuth } from "@/context/AuthContext";
 const Userdata = {
   mobilenumber: 123456789,
   Password: "oo",
 };
 export default function Login() {
+  const { setAdmin } = useAuth();
   const [mobilenumber, setmobilenumber] = useState(0);
   const [Password, setPassword] = useState("");
   const OnSubmit = (mobilenumber: number, Password: string) => {
     if (mobilenumber == Userdata.mobilenumber && Password == Userdata.Password) {
         saveAuth(Userdata);
+        setAdmin(Userdata);
       navigation.navigate("/dashboard");
     } else {
       alert("invalid mobilenumber or password");

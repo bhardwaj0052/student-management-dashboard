@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Header from "./components/layout/header";
-import AuthGuard from "./components/auth/AuthGuard";
-import Footer from "./components/layout/footer";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import AuthGuard from "@/context/AuthGuard";
+import Footer from "@/components/header/footer";
+import Header from "@/components/header/header";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

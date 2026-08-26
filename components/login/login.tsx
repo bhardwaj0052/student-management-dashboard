@@ -9,6 +9,7 @@ import {
   Typography,
 } from "@mui/material"; 
 import { useState } from "react";
+import { saveAuth } from "@/services/authService";
 const Userdata = {
   mobilenumber: 123456789,
   Password: "oo",
@@ -18,7 +19,7 @@ export default function Login() {
   const [Password, setPassword] = useState("");
   const OnSubmit = (mobilenumber: number, Password: string) => {
     if (mobilenumber == Userdata.mobilenumber && Password == Userdata.Password) {
-        localStorage.setItem("Auth", JSON.stringify(Userdata))
+        saveAuth(Userdata);
       navigation.navigate("/dashboard");
     } else {
       alert("invalid mobilenumber or password");

@@ -16,6 +16,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { usePathname, useRouter } from "next/navigation";
+import { clearAuth } from "@/services/authService";
 
 const drawerWidth = 240;
 
@@ -23,11 +24,10 @@ export default function Sidebar() {
   const router = useRouter();
 
   const handleLogout = () => {
-    localStorage.removeItem("Auth");
+    clearAuth();
     router.replace("/");
   };
   const pathname = usePathname();
-
   const isActive = (path: string) =>
     pathname === path || pathname.startsWith(`${path}/`);
 

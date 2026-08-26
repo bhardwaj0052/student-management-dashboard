@@ -8,30 +8,39 @@ import {
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  type GridColDef,
+  type GridPaginationModel,
+} from "@mui/x-data-grid";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import StudentTableHeader, { Student } from "./studenttableheader";
+import type { Student } from "@/types/student";
+import { deleteStudent } from "@/services/studentService";
+import DeleteStudentDialog from "@/components/dialogBox/dialogBox";
+import StudentTableHeader from "./studenttableheader";
 
 export default function StudntTable() {
   const router = useRouter();
   const [students, setStudents] = useState<Student[]>([]);
+  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: 15,
+  });
   const handleDataChange = useCallback((data: Student[]) => {
     setStudents(data);
+    setPaginationModel((current) => ({ ...current, page: 0 }));
   }, []);
-  const handleDelete = (id: string, name: string) => {
-    const confirmDelete = window.confirm(
-      `Are you sure you want to delete ${name} ?`,
+  const handleDelete = async (id: string | number) => {
+    const deleted = await deleteStudent(id);
+    if (!deleted) return;
+
+    setStudents((current) =>
+      current.filter((student) => String(student.id) !== String(id)),
     );
-    if (!confirmDelete) {
-      return;
-    }
-    const stored = localStorage.getItem("student");
-    if (!stored) return;
-    const data: Student[] = JSON.parse(stored);
-    const updated = data.filter((student) => student.id !== id);
-    localStorage.setItem("student", JSON.stringify(updated));
-    setStudents(updated);
+    setPaginationModel((current) => ({ ...current, page: 0 }));
+    setStudentToDelete(null);
   };
 
   const columns: GridColDef<Student>[] = [
@@ -77,7 +86,7 @@ export default function StudntTable() {
             size="small"
             color="error"
             aria-label={`Delete ${row.firstName} ${row.lastName}`}
-            onClick={() => handleDelete(row.id, row.firstName)}
+            onClick={() => setStudentToDelete(row)}
           >
             <DeleteIcon fontSize="small" />
           </IconButton>
@@ -102,22 +111,26 @@ export default function StudntTable() {
           rows={students}
           columns={columns}
           getRowId={(row) => row.id}
-          initialState={{
-            pagination: {
-              paginationModel: { pageSize: 15, page: 0 },
-            },
-          }}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
           pageSizeOptions={[15]}
           disableRowSelectionOnClick
           sx={{
             border: 0,
-            minHeight: 300,
+            height: 650,
             "& .MuiDataGrid-columnHeaders": {
               backgroundColor: "#f5f5f5",
             },
           }}
         />
       </Paper>
+      {studentToDelete && (
+        <DeleteStudentDialog
+          studentName={`${studentToDelete.firstName} ${studentToDelete.lastName}`}
+          onDelete={() => handleDelete(studentToDelete.id)}
+          onCancel={() => setStudentToDelete(null)}
+        />
+      )}
     </Box>
   );
 }

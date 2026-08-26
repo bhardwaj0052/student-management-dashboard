@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { getAuth } from "@/services/authService";
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -14,7 +15,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
-    const auth = localStorage.getItem("Auth");
+    const auth = getAuth();
     if (pathname === "/") {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setCheckingAuth(false);

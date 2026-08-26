@@ -14,26 +14,10 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import EditIcon from "@mui/icons-material/Edit";
 
 import { useRouter } from "next/navigation";
-
-export interface StudentCardData {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  dateOfBirth: string;
-  course: string;
-  Batch: string | number;
-  startdate: string;
-  trainer: string;
-  experience: string | number;
-  status: string;
-  score: number;
-  Pendingassignment: number;
-}
+import type { Student } from "@/types/student";
 
 interface StudentCardProps {
-  student: StudentCardData;
+  student: Student;
 }
 
 export default function StudentCard({ student }: StudentCardProps) {

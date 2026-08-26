@@ -11,16 +11,8 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-
-export interface Student {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  course: string;
-  status: string;
-  score: number;
-}
+import type { Student } from "@/types/student";
+import { getStudents } from "@/services/studentService";
 type Order = "asc" | "desc";
 interface StudentTableHeaderProps {
   onDataChange: (data: Student[]) => void;
@@ -40,13 +32,14 @@ export default function StudentTableHeader({
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<keyof Student>("id");
   useEffect(() => {
-    const storedData = localStorage.getItem("student");
-    if (storedData) {
-      const students: Student[] = JSON.parse(storedData);
+    const loadStudents = async () => {
+      const students = await getStudents<Student>();
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setData(students);
       onDataChange(students);
-    }
+    };
+
+    void loadStudents();
   }, [onDataChange]);
   useEffect(() => {
     const timer = setTimeout(() => {

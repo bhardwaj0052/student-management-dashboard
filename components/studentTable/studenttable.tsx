@@ -18,12 +18,14 @@ import { useRouter } from "next/navigation";
 import type { Student } from "@/types/student";
 import { deleteStudent } from "@/services/studentService";
 import DeleteStudentDialog from "@/components/dialogBox/dialogBox";
+import Toast from "@/components/dialogBox/toast";
 import StudentTableHeader from "./studenttableheader";
 
 export default function StudntTable() {
   const router = useRouter();
   const [students, setStudents] = useState<Student[]>([]);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+  const [isToastVisible, setIsToastVisible] = useState(false);
   const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
     page: 0,
     pageSize: 15,
@@ -41,6 +43,7 @@ export default function StudntTable() {
     );
     setPaginationModel((current) => ({ ...current, page: 0 }));
     setStudentToDelete(null);
+    setIsToastVisible(true);
   };
 
   const columns: GridColDef<Student>[] = [
@@ -131,6 +134,11 @@ export default function StudntTable() {
           onCancel={() => setStudentToDelete(null)}
         />
       )}
+      <Toast
+        message="Student has been deleted"
+        isVisible={isToastVisible}
+        onClose={() => setIsToastVisible(false)}
+      />
     </Box>
   );
 }

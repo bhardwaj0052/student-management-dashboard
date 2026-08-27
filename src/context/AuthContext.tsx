@@ -5,9 +5,10 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { clearAuth, getAuth } from "../services/authService";
 
 export type Admin = {
-  role: string;
-  mobilenumber: number;
-  Password: string;
+  role: "admin" | "student";
+  mobilenumber?: number;
+  Password?: string;
+  studentId?: string;
 };
 
 type AuthContextValue = {

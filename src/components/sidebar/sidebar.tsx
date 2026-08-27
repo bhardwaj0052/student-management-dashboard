@@ -21,7 +21,8 @@ const drawerWidth = 240;
 
 export default function Sidebar() {
   const router = useRouter();
-  const { logout } = useAuth();
+  const { logout, admin } = useAuth();
+  const isStudent = admin?.role === "student";
 
   const handleLogout = () => {
     logout();
@@ -53,7 +54,7 @@ export default function Sidebar() {
 
       <Box sx={{ overflow: "auto", px: 1 }}>
         <List>
-          <ListItem disablePadding>
+          {!isStudent && <ListItem disablePadding>
             <ListItemButton
               onClick={() => router.push("/dashboard")}
               sx={{
@@ -70,11 +71,11 @@ export default function Sidebar() {
               </ListItemIcon>
               <ListItemText primary="Dashboard" />
             </ListItemButton>
-          </ListItem>
+          </ListItem>}
 
           <ListItem disablePadding>
             <ListItemButton
-              onClick={() => router.push("/students")}
+              onClick={() => router.push(isStudent ? `/students/${admin.studentId}` : "/students")}
               sx={{
                 borderRadius: 2,
                 mb: 0.5,
@@ -90,7 +91,7 @@ export default function Sidebar() {
               <ListItemText primary="Student" />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
+          {!isStudent && <ListItem disablePadding>
             <ListItemButton
               onClick={() => router.push("/activity")}
               sx={{
@@ -107,7 +108,7 @@ export default function Sidebar() {
               </ListItemIcon>
               <ListItemText primary="Activity" />
             </ListItemButton>
-          </ListItem>
+          </ListItem>}
           <ListItem disablePadding>
             <ListItemButton
               onClick={() => router.push("/events")}

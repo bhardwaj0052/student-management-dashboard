@@ -25,6 +25,29 @@ export default function AuthGuard({ children }: AuthGuardProps) {
       router.replace("/");
       return;
     }
+
+    try {
+      const user = JSON.parse(auth) as { role?: string; studentId?: string };
+      if (user.role === "student") {
+        const isEventsRoute = pathname === "/events";
+        const studentRoute = pathname.match(/^\/students\/([^/]+)(\/edit)?$/);
+        const isStudentsRoute = pathname === "/students";
+        const ownsStudentRoute = studentRoute?.[1] === user.studentId;
+
+        if (isStudentsRoute) {
+          router.replace(`/students/${user.studentId}`);
+          return;
+        }
+
+        if (!isEventsRoute && !ownsStudentRoute) {
+          router.replace(`/students/${user.studentId}`);
+          return;
+        }
+      }
+    } catch {
+      router.replace("/");
+      return;
+    }
     setCheckingAuth(false);
   }, [pathname, router]);
 

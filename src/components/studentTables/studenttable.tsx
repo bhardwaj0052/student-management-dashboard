@@ -20,9 +20,12 @@ import { Student } from "@/src/types/student";
 import { deleteStudent } from "@/src/services/studentService";
 import DeleteStudentDialog from "../dialogBox/dialogBox";
 import Toast from "../dialogBox/toast";
+import { useAuth } from "@/src/context/AuthContext";
 
 export default function StudntTable() {
   const router = useRouter();
+  const { admin } = useAuth();
+  const isStudent = admin?.role === "student";
   const [students, setStudents] = useState<Student[]>([]);
   const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
   const [isToastVisible, setIsToastVisible] = useState(false);
@@ -31,9 +34,12 @@ export default function StudntTable() {
     pageSize: 15,
   });
   const handleDataChange = useCallback((data: Student[]) => {
-    setStudents(data);
+    const visibleStudents = isStudent
+      ? data.filter((student) => String(student.id) === admin?.studentId)
+      : data;
+    setStudents(visibleStudents);
     setPaginationModel((current) => ({ ...current, page: 0 }));
-  }, []);
+  }, [admin?.studentId, isStudent]);
   const handleDelete = async (id: string | number) => {
     const deleted = await deleteStudent(id);
     if (!deleted) return;
@@ -85,14 +91,14 @@ export default function StudntTable() {
           >
             <EditIcon fontSize="small" />
           </IconButton>
-          <IconButton
+          {!isStudent && <IconButton
             size="small"
             color="error"
             aria-label={`Delete ${row.firstName} ${row.lastName}`}
             onClick={() => setStudentToDelete(row)}
           >
             <DeleteIcon fontSize="small" />
-          </IconButton>
+          </IconButton>}
         </Box>
       ),
     },
@@ -103,6 +109,7 @@ export default function StudntTable() {
       <StudentTableHeader
         onDataChange={handleDataChange}
         onAddStudent={() => router.push("/students/add")}
+        isStudent={isStudent}
       />
       <Paper
         sx={{

@@ -59,13 +59,13 @@ export default function Header() {
                 variant="body2"
                 sx={{ color: "whitesmoke", fontWeight: 600, lineHeight: 1.2 }}
               >
-                Admin
+                {admin.role === "student" ? "Student" : "Admin"}
               </Typography>
               <Typography
                 variant="caption"
                 sx={{ color: "rgba(255,255,255,0.6)" }}
               >
-                {admin.mobilenumber}
+                {admin.role === "student" ? `ID: ${admin.studentId}` : admin.mobilenumber}
               </Typography>
             </Box>
             <Avatar

@@ -19,7 +19,7 @@ const Userdata = {
   role: "admin",
   mobilenumber: 123456789,
   Password: "oo",
-};
+} as const;
 
 export default function Login() {
   const { setAdmin } = useAuth();
@@ -45,9 +45,11 @@ export default function Login() {
     return (
       <StudentLogin
         onAdminLogin={() => setShowStudentLogin(false)}
-        onLogin={(studentId, dob) => {
-          console.log("Student ID:", studentId);
-          console.log("DOB:", dob);
+        onLogin={(studentId) => {
+          const studentSession = { role: "student" as const, studentId };
+          saveAuth(studentSession);
+          setAdmin(studentSession);
+          router.push(`/students/${studentId}`);
         }}
       />
     );

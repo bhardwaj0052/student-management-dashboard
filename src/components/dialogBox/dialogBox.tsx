@@ -9,22 +9,24 @@ import {
 } from "@mui/material";
 
 interface DeleteStudentDialogProps {
-  studentName: string;
+  studentName?: string;
+  itemName?: string;
   onDelete: () => void;
   onCancel: () => void;
 }
 
 const DeleteStudentDialog: React.FC<DeleteStudentDialogProps> = ({
   studentName,
+  itemName,
   onDelete,
   onCancel,
 }) => {
   return (
     <Dialog open onClose={onCancel} aria-labelledby="delete-student-title">
-      <DialogTitle id="delete-student-title">Delete Student</DialogTitle>
+      <DialogTitle id="delete-student-title">Delete item</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Are you sure you want to delete <strong>{studentName}</strong>?
+          Are you sure you want to delete <strong>{itemName ?? studentName}</strong>?
         </DialogContentText>
       </DialogContent>
       <DialogActions>

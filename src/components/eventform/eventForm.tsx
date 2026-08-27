@@ -30,10 +30,10 @@ export default function EventForm({
     setFormData(
       event
         ? {
-            eventName: event.eventName,
-            details: event.details,
-            date: event.date,
-            time: event.time,
+            eventName: event.eventName ?? "",
+            details: event.details ?? "",
+            date: event.date ?? "",
+            time: event.time ?? "",
             location: event.location ?? "",
           }
         : { eventName: "", details: "", date: "", time: "", location: "" },
@@ -104,7 +104,7 @@ export default function EventForm({
 
         <Box sx={{ display: "flex", gap: 1 }}>
           <Button type="submit" variant="contained">
-            {event ? "Save changes" : "Add event"}
+            {event ? "Save" : "Add event"}
           </Button>
           {event && (
             <Button type="button" onClick={onCancel}>

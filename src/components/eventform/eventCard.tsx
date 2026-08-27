@@ -27,9 +27,10 @@ export interface EventCardProps {
   event: EventData;
   onEdit?: (id: EventData["id"]) => void;
   onDelete?: (id: EventData["id"]) => void;
+  readOnly?: boolean;
 }
 
-export default function EventCard({ event, onEdit, onDelete }: EventCardProps) {
+export default function EventCard({ event, onEdit, onDelete, readOnly = false }: EventCardProps) {
   const { id, eventName, details, date, time, location } = event;
 
   return (
@@ -75,32 +76,20 @@ export default function EventCard({ event, onEdit, onDelete }: EventCardProps) {
             {eventName}
           </Typography>
 
-          <Box sx={{ display: "flex", gap: 0.5, flexShrink: 0 }}>
-            <Tooltip title="Edit">
-              <IconButton
-                size="small"
-                onClick={() => onEdit?.(id)}
-                sx={{
-                  color: "primary.main",
-                  "&:hover": { bgcolor: "primary.light" },
-                }}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Delete">
-              <IconButton
-                size="small"
-                onClick={() => onDelete?.(id)}
-                sx={{
-                  color: "error.main",
-                  "&:hover": { bgcolor: "error.light" },
-                }}
-              >
-                <DeleteIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          </Box>
+          {!readOnly && (
+            <Box sx={{ display: "flex", gap: 0.5, flexShrink: 0 }}>
+              <Tooltip title="Edit">
+                <IconButton size="small" onClick={() => onEdit?.(id)} sx={{ color: "primary.main", "&:hover": { bgcolor: "primary.light" } }}>
+                  <EditIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Delete">
+                <IconButton size="small" onClick={() => onDelete?.(id)} sx={{ color: "error.main", "&:hover": { bgcolor: "error.light" } }}>
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          )}
         </Box>
 
         {/* Details */}

@@ -26,11 +26,13 @@ type Order = "asc" | "desc";
 interface StudentTableHeaderProps {
   onDataChange: (data: Student[]) => void;
   onAddStudent: () => void;
+  isStudent?: boolean;
 }
 
 export default function StudentTableHeader({
   onDataChange,
   onAddStudent,
+  isStudent = false,
 }: StudentTableHeaderProps) {
   const [data, setData] = useState<Student[]>([]);
   const [search, setSearch] = useState("");
@@ -150,13 +152,11 @@ export default function StudentTableHeader({
         <Typography variant="h4" sx={{ fontWeight: 900 }}>
           Students Table
         </Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={onAddStudent}
-        >
-          Add Student
-        </Button>
+        {!isStudent && (
+          <Button variant="contained" startIcon={<AddIcon />} onClick={onAddStudent}>
+            Add Student
+          </Button>
+        )}
       </Box>
 
       <Divider sx={{ mb: 2.5 }} />

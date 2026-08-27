@@ -13,8 +13,15 @@ const getActor = (): string => {
 	if (!storedAuth) return "Admin";
 
 	try {
-		const admin = JSON.parse(storedAuth) as { mobilenumber?: number };
-		return admin.mobilenumber ? `Admin (${admin.mobilenumber})` : "Admin";
+		const user = JSON.parse(storedAuth) as {
+			role?: "admin" | "student";
+			mobilenumber?: number;
+			studentId?: string;
+		};
+		if (user.role === "student") {
+			return user.studentId ? `Student (${user.studentId})` : "Student";
+		}
+		return user.mobilenumber ? `Admin (${user.mobilenumber})` : "Admin";
 	} catch {
 		return "Admin";
 	}

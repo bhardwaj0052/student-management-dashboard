@@ -22,7 +22,7 @@ import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import AssignmentLateIcon from "@mui/icons-material/AssignmentLate";
 
 import { useRouter } from "next/navigation";
-import type { Student } from "@/types/student";
+import { Student } from "@/src/types/student";
 
 interface StudentCardProps {
   student: Student;
@@ -73,6 +73,9 @@ export default function StudentCard({ student }: StudentCardProps) {
           <Box>
             <Typography variant="h5" sx={{ fontWeight: 700 }}>
               {student.firstName} {student.lastName}
+            </Typography>
+            <Typography sx={{ fontWeight: 400 }}>
+              ID: {student.id}
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.75, mt: 0.25 }}>
               <Box sx={{ width: 7, height: 7, borderRadius: "50%", backgroundColor: accent }} />

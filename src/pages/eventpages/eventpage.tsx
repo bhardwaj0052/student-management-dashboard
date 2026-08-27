@@ -9,11 +9,16 @@ import EventCard from "@/src/components/eventform/eventCard";
 import { EventData } from "@/src/components/eventform/eventCard";
 import { createEvent, deleteEvent, getEvents, updateEvent } from "@/src/services/eventService";
 import Sidebar from "@/src/components/sidebar/sidebar";
+import { useAuth } from "@/src/context/AuthContext";
+import DeleteDialog from "@/src/components/dialogBox/dialogBox";
 
 export default function EventPage() {
   const [events, setEvents] = useState<EventData[]>([]);
   const [editingEvent, setEditingEvent] = useState<EventData | undefined>();
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState<EventData | null>(null);
+  const { admin } = useAuth();
+  const isStudent = admin?.role === "student";
 
   useEffect(() => {
     setEvents(getEvents());
@@ -38,8 +43,15 @@ export default function EventPage() {
   };
 
   const handleDelete = (id: EventData["id"]) => {
-    deleteEvent(id);
-    setEvents((prev) => prev.filter((event) => event.id !== id));
+    const event = events.find((currentEvent) => currentEvent.id === id);
+    if (event) setEventToDelete(event);
+  };
+
+  const confirmDelete = () => {
+    if (!eventToDelete) return;
+    deleteEvent(eventToDelete.id);
+    setEvents((prev) => prev.filter((event) => event.id !== eventToDelete.id));
+    setEventToDelete(null);
   };
 
   return (
@@ -72,38 +84,42 @@ export default function EventPage() {
             <Typography variant="h4" sx={{ fontWeight: 700 }}>
               Events
             </Typography>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => {
-                setEditingEvent(undefined);
-                setIsFormOpen(true);
-              }}
-            >
-              Add event
-            </Button>
+            {!isStudent && (
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => {
+                  setEditingEvent(undefined);
+                  setIsFormOpen(true);
+                }}
+              >
+                Add event
+              </Button>
+            )}
           </Box>
 
-          <Dialog
-            open={isFormOpen}
-            onClose={() => {
-              setIsFormOpen(false);
-              setEditingEvent(undefined);
-            }}
-            fullWidth
-            maxWidth="sm"
-          >
-            <DialogContent sx={{ pt: 3 }}>
-              <EventForm
-                event={editingEvent}
-                onSubmit={handleAddEvent}
-                onCancel={() => {
-                  setIsFormOpen(false);
-                  setEditingEvent(undefined);
-                }}
-              />
-            </DialogContent>
-          </Dialog>
+          {!isStudent && (
+            <Dialog
+              open={isFormOpen}
+              onClose={() => {
+                setIsFormOpen(false);
+                setEditingEvent(undefined);
+              }}
+              fullWidth
+              maxWidth="sm"
+            >
+              <DialogContent sx={{ pt: 3 }}>
+                <EventForm
+                  event={editingEvent}
+                  onSubmit={handleAddEvent}
+                  onCancel={() => {
+                    setIsFormOpen(false);
+                    setEditingEvent(undefined);
+                  }}
+                />
+              </DialogContent>
+            </Dialog>
+          )}
 
           <Box
             sx={{
@@ -125,10 +141,19 @@ export default function EventPage() {
                   event={event}
                   onEdit={handleEdit}
                   onDelete={handleDelete}
+                  readOnly={isStudent}
                 />
               </Box>
             ))}
           </Box>
+
+          {eventToDelete && (
+            <DeleteDialog
+              itemName={eventToDelete.eventName}
+              onDelete={confirmDelete}
+              onCancel={() => setEventToDelete(null)}
+            />
+          )}
         </Box>
       </Box>
     </Box>

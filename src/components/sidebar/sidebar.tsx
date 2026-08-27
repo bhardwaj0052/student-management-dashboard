@@ -14,7 +14,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import PeopleIcon from "@mui/icons-material/People";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { usePathname, useRouter } from "next/navigation";
-import { Timeline } from "@mui/icons-material";
+import { EventAvailableTwoTone, Timeline } from "@mui/icons-material";
 import { useAuth } from "@/src/context/AuthContext";
 
 const drawerWidth = 240;
@@ -121,7 +121,7 @@ export default function Sidebar() {
               }}
             >
               <ListItemIcon>
-                <Timeline sx={{ color: "white" }} />
+                <EventAvailableTwoTone sx={{ color: "white" }} />
               </ListItemIcon>
               <ListItemText primary="Events" />
             </ListItemButton>

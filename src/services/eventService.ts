@@ -1,4 +1,4 @@
-import { EventData } from "@/src/components/eventform/eventCard";
+import { EventData } from "@/src/components/statecard/eventCard";
 import { EventFormData } from "@/src/components/eventform/eventForm";
 
 const STORAGE_KEY = "eventdata";

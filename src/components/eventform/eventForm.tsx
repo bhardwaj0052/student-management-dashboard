@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { EventData } from "./eventCard";
+import { EventData } from "../statecard/eventCard";
 
 export type EventFormData = Omit<EventData, "id">;
 

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { getAuth } from "../services/authService";
+import { clearAuth, getAuth } from "../services/authService";
+import { useAuth } from "./AuthContext";
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -11,12 +12,15 @@ interface AuthGuardProps {
 export default function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { setAdmin } = useAuth();
 
   const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
     const auth = getAuth();
     if (pathname === "/") {
+      clearAuth();
+      setAdmin(null);
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setCheckingAuth(false);
       return;
@@ -49,7 +53,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
       return;
     }
     setCheckingAuth(false);
-  }, [pathname, router]);
+  }, [pathname, router, setAdmin]);
 
   if (checkingAuth) {
     return null;

@@ -43,8 +43,8 @@ export const validationSchemas = [
     status: Yup.string()
       .oneOf(["Pending", "Active", "Completed"], "Invalid status")
       .required("Status is required"),
-    score: Yup.number(),
-    Pendingassignment: Yup.number(),
+    score: Yup.number().max(100, "Score cannot exceed 100").min(0,"Score can not be a negative number"),
+    Pendingassignment: Yup.number().min(0,"Assingment can not be a negative"),
   }),
   Yup.object(),
 ];

@@ -16,7 +16,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { emptyValues, FormMode, steps, StudentFormValues, validationSchemas } from "@/src/utils/studentFormValidation";
+import {
+  emptyValues,
+  FormMode,
+  steps,
+  StudentFormValues,
+  validationSchemas,
+} from "@/src/utils/studentFormValidation";
 
 interface StudentFormProps {
   mode: FormMode;
@@ -293,7 +299,7 @@ export default function StudentForm({
               ["Score", formik.values.score],
               ["Pending assignment", formik.values.Pendingassignment],
             ].map(([label, value]) => (
-              <Typography key={label} sx={{gap:2}}>
+              <Typography key={label} sx={{ gap: 2 }}>
                 <strong>{label}:</strong> {value}
               </Typography>
             ))}

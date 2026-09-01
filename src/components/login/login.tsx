@@ -42,7 +42,7 @@ export default function Login() {
   };
 
   if (showStudentLogin) {
-    return (
+    return (  
       <StudentLogin
         onAdminLogin={() => setShowStudentLogin(false)}
         onLogin={(studentId) => {

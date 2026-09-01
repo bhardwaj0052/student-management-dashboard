@@ -13,7 +13,7 @@ export type Admin = {
 
 type AuthContextValue = {
   admin: Admin | null;
-  setAdmin: (admin: Admin | null) => void;
+  setAdmin: (admin: Admin) => void;
   logout: () => void;
 };
 
